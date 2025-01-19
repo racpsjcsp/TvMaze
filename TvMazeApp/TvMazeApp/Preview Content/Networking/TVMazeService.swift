@@ -65,8 +65,36 @@ class TVMazeService: ObservableObject {
     }
 
     // Fetch episodes by season (no state management here)
-    func fetchEpisodes(for showID: Int, completion: @escaping (Result<[Episode], Error>) -> Void) {
+    func fetchEpisodes(for showID: Int, completion: @escaping (Result<[Int: [Episode]], Error>) -> Void) {
         let urlString = "https://api.tvmaze.com/shows/\(showID)/episodes"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map { $0.data }
+            .decode(type: [Episode].self, decoder: JSONDecoder())
+            .map { episodes in
+                Dictionary(grouping: episodes, by: { $0.season })
+            }
+            .sink(receiveCompletion: { completionStatus in
+                if case .failure(let error) = completionStatus {
+                    completion(.failure(error))
+                }
+            }, receiveValue: { groupedEpisodes in
+                completion(.success(groupedEpisodes))
+            })
+            .store(in: &cancellables)
+    }
+
+    func searchArtist(by name: String, completion: @escaping (Result<[Artist], Error>) -> Void) {
+        guard !name.isEmpty else {
+            completion(.success([])) // Return empty array if name is empty
+            return
+        }
+
+        let urlString = "https://api.tvmaze.com/search/people?q=\(name)"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
@@ -74,13 +102,56 @@ class TVMazeService: ObservableObject {
 
         URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
-            .decode(type: [Episode].self, decoder: JSONDecoder())
+            .decode(type: [ArtistSearchResult].self, decoder: JSONDecoder())
+            .map { results in
+                results.map { result in
+                    Artist(
+                        id: result.person.id,
+                        name: result.person.name,
+                        image: result.person.image,
+                        shows: result.embedded?.shows ?? []
+                    )
+                }
+            }
             .sink(receiveCompletion: { completionStatus in
                 if case .failure(let error) = completionStatus {
                     completion(.failure(error))
                 }
-            }, receiveValue: { episodes in
-                completion(.success(episodes))
+            }, receiveValue: { artists in
+                completion(.success(artists))
+            })
+            .store(in: &cancellables)
+    }
+
+    func fetchShowsForArtist(artistID: Int, completion: @escaping (Result<[TVShow], Error>) -> Void) {
+        let urlString = "https://api.tvmaze.com/people/\(artistID)?embed=castcredits"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
+            return
+        }
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let data = data else { return }
+            print(String(data: data, encoding: .utf8) ?? "No data")
+        }.resume()
+
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map { $0.data }
+            .decode(type: ArtistDetailsResponse.self, decoder: JSONDecoder())
+            .map { response in
+                
+                response.embedded.castCredits.compactMap { $0.show } // Extract show names
+            }
+            .sink(receiveCompletion: { completionStatus in
+                if case .failure(let error) = completionStatus {
+                    completion(.failure(error))
+                }
+            }, receiveValue: { showNames in
+                print(showNames)
+                completion(.success(showNames))
             })
             .store(in: &cancellables)
     }

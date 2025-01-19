@@ -28,6 +28,9 @@ struct TVShowListView: View {
                 }
             }
             .searchable(text: $viewModel.searchQuery, prompt: "Search")
+            .onChange(of: viewModel.searchQuery) { _, newValue in
+                viewModel.searchShows(query: newValue)
+            }
             .navigationTitle("TVMaze Series")
             .onAppear {
                 viewModel.fetchShows()

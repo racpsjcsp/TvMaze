@@ -14,26 +14,21 @@ class TVShowDetailViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private let service = TVMazeService.shared
+
     func fetchEpisodes(for showID: Int) {
         isLoading = true
-        let urlString = "https://api.tvmaze.com/shows/\(showID)/episodes"
-        guard let url = URL(string: urlString) else { return }
 
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: [Episode].self, decoder: JSONDecoder())
-            .map { episodes in
-                Dictionary(grouping: episodes, by: { $0.season })
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                self.isLoading = false
-                if case .failure(let error) = completion {
+        service.fetchEpisodes(for: showID) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let groupedEpisodes):
+                    self?.episodesBySeason = groupedEpisodes
+                case .failure(let error):
                     print("Error fetching episodes: \(error.localizedDescription)")
                 }
-            }, receiveValue: { groupedEpisodes in
-                self.episodesBySeason = groupedEpisodes
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 }

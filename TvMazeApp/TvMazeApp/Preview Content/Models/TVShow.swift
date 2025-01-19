@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TVShow: Identifiable, Codable, Equatable {
+struct TVShow: Identifiable, Codable, Equatable, Hashable {
     let id: Int
     let name: String
     let image: ImageURL?
@@ -29,12 +29,12 @@ struct TVShow: Identifiable, Codable, Equatable {
         return "\(schedule!.days.joined(separator: ", ")) at \(time)"
     }
 
-    struct Schedule: Codable, Equatable {
+    struct Schedule: Codable, Equatable, Hashable {
         let time: String
         let days: [String]
     }
 
-    struct ImageURL: Codable, Equatable {
+    struct ImageURL: Codable, Equatable, Hashable {
         let medium: String?
         let original: String?
     }

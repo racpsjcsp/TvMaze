@@ -16,27 +16,24 @@ class TVShowViewModel: ObservableObject {
     private var currentPage = 0
     private var cancellables = Set<AnyCancellable>()
 
+    private let service = TVMazeService.shared
+
     func fetchShows() {
         guard !isLoading else { return }
         isLoading = true
-        let urlString = "https://api.tvmaze.com/shows?page=\(currentPage)"
 
-        guard let url = URL(string: urlString) else { return }
-
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: [TVShow].self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                self.isLoading = false
-                if case .failure(let error) = completion {
+        service.fetchShows(page: currentPage) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let shows):
+                    self?.shows.append(contentsOf: shows)
+                    self?.currentPage += 1
+                case .failure(let error):
                     print("Error fetching shows: \(error.localizedDescription)")
                 }
-            }, receiveValue: { shows in
-                self.shows.append(contentsOf: shows)
-                self.currentPage += 1
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     func searchShows(query: String) {
@@ -47,25 +44,18 @@ class TVShowViewModel: ObservableObject {
             return
         }
 
-        let searchQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://api.tvmaze.com/search/shows?q=\(searchQuery)"
-        guard let url = URL(string: urlString) else { return }
-
         isLoading = true
 
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: [SearchResult].self, decoder: JSONDecoder())
-            .map { $0.map { $0.show } }  // Extract TVShow from SearchResult
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+        service.searchShows(query: query) { [weak self] result in
+            DispatchQueue.main.async {
                 self?.isLoading = false
-                if case .failure(let error) = completion {
+                switch result {
+                case .success(let shows):
+                    self?.shows = shows
+                case .failure(let error):
                     print("Error searching shows: \(error.localizedDescription)")
                 }
-            }, receiveValue: { [weak self] shows in
-                self?.shows = shows
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 }

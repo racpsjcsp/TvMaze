@@ -42,3 +42,49 @@ struct ArtistPerson: Codable {
 struct EmbeddedShows: Codable {
     let shows: [TVShow]
 }
+
+struct ArtistDetailsResponse: Decodable {
+    let id: Int
+    let name: String
+    let image: ImageInfo?
+    let embedded: EmbeddedCastCredits
+    let links: Links
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, image
+        case embedded = "_embedded"
+        case links = "_links"
+    }
+}
+
+struct ImageInfo: Decodable {
+    let medium: String?
+    let original: String?
+}
+
+struct EmbeddedCastCredits: Decodable {
+    let castCredits: [CastCredit]
+
+    enum CodingKeys: String, CodingKey {
+        case castCredits = "castcredits"
+    }
+}
+
+struct CastCredit: Decodable {
+    let id: Int
+    let show: TVShow?
+}
+
+struct Links: Codable {
+    let show: ShowLink
+
+    enum CodingKeys: String, CodingKey {
+        case show = "show"
+    }
+}
+
+struct ShowLink: Codable {
+    let href: String
+    let name: String
+}
+

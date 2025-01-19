@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ArtistDetailView: View {
     let artist: Artist
+    @StateObject private var viewModel = ArtistDetailViewModel()
     
     var body: some View {
         ScrollView {
@@ -31,40 +32,47 @@ struct ArtistDetailView: View {
                     .font(.title)
                     .bold()
                 
-                // TV Shows
-                if !artist.shows.isEmpty {
-                    Text("TV Shows")
-                        .font(.headline)
-                        .padding(.top)
-                    
-                    ForEach(artist.shows) { show in
-                        NavigationLink(destination: TVShowDetailView(show: show)) {
-                            HStack {
-                                AsyncImage(url: URL(string: show.image?.medium ?? "")) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                } placeholder: {
-                                    ProgressView()
+                // List of shows
+                if viewModel.isLoading {
+                    ProgressView("Loading shows...")
+                } else {
+                    if !viewModel.shows.isEmpty {
+                        Text("TV Shows")
+                            .font(.headline)
+                            .padding(.top)
+
+                        List(viewModel.shows, id: \.self) { show in
+                            NavigationLink(destination: TVShowDetailView(show: show)) {
+                                HStack {
+                                    AsyncImage(url: URL(string: show.image?.medium ?? "")) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    .frame(width: 60, height: 90)
+                                    .cornerRadius(8)
+
+                                    Text(show.name)
+                                        .font(.subheadline)
                                 }
-                                .frame(width: 60, height: 90)
-                                .cornerRadius(8)
-                                
                                 Text(show.name)
-                                    .font(.subheadline)
                             }
                         }
-                        .padding(.vertical, 4)
+                    } else {
+                        Text("No TV shows available.")
+                            .foregroundColor(.secondary)
+                            .padding()
                     }
-                } else {
-                    Text("No TV shows available.")
-                        .foregroundColor(.secondary)
-                        .padding()
                 }
             }
             .padding()
         }
         .navigationTitle(artist.name)
+        .onAppear {
+            viewModel.fetchShowsForArtist(artistID: artist.id)
+        }
     }
 }
 
