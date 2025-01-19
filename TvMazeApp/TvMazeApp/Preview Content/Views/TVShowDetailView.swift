@@ -32,14 +32,14 @@ struct TVShowDetailView: View {
                 
                 // Airing Days & Time
                 if let schedule = show.scheduleText {
-                    Text("Airs: \(schedule)")
+                    Text("\(StringUtils.airingScheduleLabel) \(schedule)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 
                 // Genres
                 if let genres = show.genresText {
-                    Text("Genres: \(genres)")
+                    Text("\(StringUtils.genresLabel) \(genres)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -52,7 +52,7 @@ struct TVShowDetailView: View {
                 
                 // Episodes by Season
                 ForEach(viewModel.episodesBySeason.keys.sorted(), id: \.self) { season in
-                    Section(header: Text("Season \(season)")
+                    Section(header: Text("\(StringUtils.season) \(season)")
                         .font(.headline)
                         .padding(.top)) {
                             ForEach(viewModel.episodesBySeason[season] ?? []) { episode in
@@ -60,11 +60,11 @@ struct TVShowDetailView: View {
                                     VStack(alignment: .leading) {
                                         Text("S\(episode.season)E\(episode.number): \(episode.name)")
                                             .font(.subheadline)
-                                        if let airdate = episode.airdate {
-                                            Text("Air Date: \(airdate)")
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                        }
+
+                                        // Airdate handling moved to a computed property
+                                        Text(getFormattedAirdate(for: episode))
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
                                 .padding(.vertical, 4)
@@ -77,6 +77,15 @@ struct TVShowDetailView: View {
         .navigationTitle(show.name)
         .onAppear {
             viewModel.fetchEpisodes(for: show.id)
+        }
+    }
+
+    private func getFormattedAirdate(for episode: Episode) -> String {
+        if let airdate = episode.airdate,
+           let formattedDate = DateUtils.formatDate(airdate) {
+            return "\(StringUtils.episodeAirDateLabel) \(formattedDate)"
+        } else {
+            return "\(StringUtils.episodeAirDateLabel) N/A"
         }
     }
 }

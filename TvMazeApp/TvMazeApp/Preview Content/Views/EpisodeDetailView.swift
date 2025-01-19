@@ -32,7 +32,7 @@ struct EpisodeDetailView: View {
                     .bold()
 
                 // Season and Episode Number
-                Text("Season \(episode.season), Episode \(episode.number)")
+                Text("\(StringUtils.season) \(episode.season), \(StringUtils.episode) \(episode.number)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 
@@ -41,7 +41,7 @@ struct EpisodeDetailView: View {
                     Text(summary)
                         .font(.body)
                 } else {
-                    Text("No summary available.")
+                    Text(StringUtils.noSummaryAvailable)
                         .font(.body)
                         .foregroundColor(.secondary)
                 }

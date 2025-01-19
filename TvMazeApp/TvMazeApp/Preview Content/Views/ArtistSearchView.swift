@@ -41,7 +41,7 @@ struct ArtistSearchView: View {
                 ProgressView()
                     .padding()
             } else if viewModel.artists.isEmpty && !searchQuery.isEmpty {
-                Text("No results found.")
+                Text(StringUtils.noResultsFound)
                     .foregroundColor(.secondary)
                     .padding()
             } else {
@@ -71,7 +71,7 @@ struct ArtistSearchView: View {
                 .listStyle(PlainListStyle())
             }
         }
-        .navigationTitle("Search Artists")
+        .navigationTitle(StringUtils.artistSearchTitle)
     }
 }
 

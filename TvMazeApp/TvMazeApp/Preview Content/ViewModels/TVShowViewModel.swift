@@ -53,7 +53,7 @@ class TVShowViewModel: ObservableObject {
                 case .success(let shows):
                     self?.shows = shows
                 case .failure(let error):
-                    print("Error searching shows: \(error.localizedDescription)")
+                    print("\(StringUtils.errorFetchingShows) \(error.localizedDescription)")
                 }
             }
         }

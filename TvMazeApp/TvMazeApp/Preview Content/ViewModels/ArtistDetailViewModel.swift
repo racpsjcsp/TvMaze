@@ -24,7 +24,7 @@ class ArtistDetailViewModel: ObservableObject {
                 case .success(let shows):
                     self?.shows = shows
                 case .failure(let error):
-                    print("Error fetching shows for artist: \(error.localizedDescription)")
+                    print("\(StringUtils.errorFetchingShowsForArtist) \(error.localizedDescription)")
                 }
             }
         }

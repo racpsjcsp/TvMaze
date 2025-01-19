@@ -34,10 +34,10 @@ struct ArtistDetailView: View {
                 
                 // List of shows
                 if viewModel.isLoading {
-                    ProgressView("Loading shows...")
+                    ProgressView(StringUtils.loadingShowsText)
                 } else {
                     if !viewModel.shows.isEmpty {
-                        Text("TV Shows")
+                        Text(StringUtils.tvShowTitle)
                             .font(.headline)
                             .padding(.top)
 
@@ -61,7 +61,7 @@ struct ArtistDetailView: View {
                             }
                         }
                     } else {
-                        Text("No TV shows available.")
+                        Text(StringUtils.noShowsAvailable)
                             .foregroundColor(.secondary)
                             .padding()
                     }

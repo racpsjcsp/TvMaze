@@ -26,7 +26,7 @@ class TVShowDetailViewModel: ObservableObject {
                 case .success(let groupedEpisodes):
                     self?.episodesBySeason = groupedEpisodes
                 case .failure(let error):
-                    print("Error fetching episodes: \(error.localizedDescription)")
+                    print("\(StringUtils.errorFetchingEpisode) \(error.localizedDescription)")
                 }
             }
         }

@@ -23,15 +23,15 @@ struct TVShowListView: View {
                 }
 
                 if viewModel.isLoading {
-                    ProgressView("Loading...")
+                    ProgressView(StringUtils.loadingText)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .searchable(text: $viewModel.searchQuery, prompt: "Search")
+            .searchable(text: $viewModel.searchQuery, prompt: StringUtils.search)
             .onChange(of: viewModel.searchQuery) { _, newValue in
                 viewModel.searchShows(query: newValue)
             }
-            .navigationTitle("TVMaze Series")
+            .navigationTitle(StringUtils.tvMazeSeries)
             .onAppear {
                 viewModel.fetchShows()
             }

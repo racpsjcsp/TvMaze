@@ -13,7 +13,7 @@ struct MainView: View {
             VStack(spacing: 40) {
                 // TV Shows Button
                 NavigationLink(destination: TVShowListView()) {
-                    Text("TV Shows")
+                    Text(StringUtils.tvShowTitle)
                         .font(.title2)
                         .bold()
                         .padding()
@@ -26,7 +26,7 @@ struct MainView: View {
                 
                 // Artists Button
                 NavigationLink(destination: ArtistSearchView()) {
-                    Text("Artists")
+                    Text(StringUtils.artists)
                         .font(.title2)
                         .bold()
                         .padding()
@@ -37,7 +37,7 @@ struct MainView: View {
                         .padding(.horizontal, 40)
                 }
             }
-            .navigationTitle("TVMaze App")
+            .navigationTitle(StringUtils.appTitle)
         }
     }
 }
