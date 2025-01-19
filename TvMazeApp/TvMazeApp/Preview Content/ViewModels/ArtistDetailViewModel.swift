@@ -17,7 +17,7 @@ class ArtistDetailViewModel: ObservableObject {
 
     func fetchShowsForArtist(artistID: Int) {
         isLoading = true
-        service.fetchShowsForArtist(artistID: artistID) { [weak self] result in
+        service.fetchArtistDetails(artistID: artistID) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {

@@ -85,11 +85,7 @@ struct TVShowDetailView: View {
            let formattedDate = DateUtils.formatDate(airdate) {
             return "\(StringUtils.episodeAirDateLabel) \(formattedDate)"
         } else {
-            return "\(StringUtils.episodeAirDateLabel) N/A"
+            return "\(StringUtils.episodeAirDateLabel) \(StringUtils.notAvailable)"
         }
     }
-}
-
-#Preview {
-    //    TVShowDetailView()
 }

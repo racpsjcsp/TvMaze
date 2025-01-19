@@ -75,7 +75,3 @@ struct ArtistDetailView: View {
         }
     }
 }
-
-#Preview {
-//    ArtistDetailView()
-}

@@ -17,7 +17,7 @@ class TVMazeService: ObservableObject {
 
     // Fetch shows (no state management here)
     func fetchShows(page: Int, completion: @escaping (Result<[TVShow], Error>) -> Void) {
-        let urlString = "https://api.tvmaze.com/shows?page=\(page)"
+        let urlString = APIEndpoints.getShowsURL(page: page)
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
@@ -44,7 +44,7 @@ class TVMazeService: ObservableObject {
         }
 
         let searchQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://api.tvmaze.com/search/shows?q=\(searchQuery)"
+        let urlString = APIEndpoints.searchShowsURL(query: searchQuery)
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
@@ -66,7 +66,7 @@ class TVMazeService: ObservableObject {
 
     // Fetch episodes by season (no state management here)
     func fetchEpisodes(for showID: Int, completion: @escaping (Result<[Int: [Episode]], Error>) -> Void) {
-        let urlString = "https://api.tvmaze.com/shows/\(showID)/episodes"
+        let urlString = APIEndpoints.getEpisodesURL(for: showID)
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
@@ -94,7 +94,7 @@ class TVMazeService: ObservableObject {
             return
         }
 
-        let urlString = "https://api.tvmaze.com/search/people?q=\(name)"
+        let urlString = APIEndpoints.searchArtistURL(name: name)
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
@@ -123,8 +123,8 @@ class TVMazeService: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func fetchShowsForArtist(artistID: Int, completion: @escaping (Result<[TVShow], Error>) -> Void) {
-        let urlString = "https://api.tvmaze.com/people/\(artistID)?embed=castcredits"
+    func fetchArtistDetails(artistID: Int, completion: @escaping (Result<[TVShow], Error>) -> Void) {
+        let urlString = APIEndpoints.getArtistDetailsURL(artistID: artistID)
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return

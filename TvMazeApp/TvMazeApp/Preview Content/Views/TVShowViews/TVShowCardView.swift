@@ -35,12 +35,4 @@ struct TVShowCardView: View {
             }
         }
     }
-
-    private func cleanSummary(_ text: String) -> String {
-        text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
-    }
-}
-
-#Preview {
-    //    TVShowCardView()
 }

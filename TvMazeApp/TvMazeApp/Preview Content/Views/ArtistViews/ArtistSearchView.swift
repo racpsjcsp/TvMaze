@@ -10,14 +10,16 @@ import SwiftUI
 struct ArtistSearchView: View {
     @StateObject private var viewModel = ArtistViewModel()
     @State private var searchQuery: String = ""
-    
+    @FocusState private var isSearchFieldFocused: Bool
+
     var body: some View {
         VStack {
             HStack {
                 // Search Field
-                TextField("Search for an artist...", text: $searchQuery)
+                TextField(StringUtils.searchArtistPlaceholder, text: $searchQuery)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.leading)
+                    .focused($isSearchFieldFocused)  // Bind focus state to the search field
                     .onSubmit {
                         viewModel.searchArtist(by: searchQuery)  // 🔎 Trigger search on Return key
                     }
@@ -26,7 +28,7 @@ struct ArtistSearchView: View {
                 Button(action: {
                     viewModel.searchArtist(by: searchQuery)  // 🔎 Trigger search on button tap
                 }) {
-                    Image(systemName: "magnifyingglass")
+                    Image(systemName: ImageUtils.magnifyingGlass)
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.blue)
@@ -54,7 +56,7 @@ struct ArtistSearchView: View {
                                     .resizable()
                                     .scaledToFill()
                             } placeholder: {
-                                Image(systemName: "person.crop.circle.fill")
+                                Image(systemName: ImageUtils.personCropCircleFill)
                                     .resizable()
                                     .scaledToFit()
                                     .foregroundColor(.gray)
@@ -72,6 +74,9 @@ struct ArtistSearchView: View {
             }
         }
         .navigationTitle(StringUtils.artistSearchTitle)
+        .onAppear {
+            isSearchFieldFocused = true
+        }
     }
 }
 

@@ -52,7 +52,3 @@ struct EpisodeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
-#Preview {
-    //    EpisodeDetailView()
-}

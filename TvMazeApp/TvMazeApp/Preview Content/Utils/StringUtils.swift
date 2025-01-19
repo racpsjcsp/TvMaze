@@ -11,7 +11,7 @@ struct StringUtils {
 
     // MARK: - General Strings
     static let appTitle = "TVMaze App"
-    static let searchPlaceholder = "Search for an artist..."
+    static let searchArtistPlaceholder = "Search for an artist..."
     static let noResultsFound = "No results found."
     static let loadingText = "Loading..."
     static let loadingShowsText = "Loading shows..."
@@ -32,7 +32,7 @@ struct StringUtils {
     static let noSummaryAvailable = "No summary available."
     static let tvMazeSeries = "TVMaze Series"
     static let search = "Search"
-
+    static let notAvailable = "N/A"
 
     // MARK: - Episode Strings
     static let episodeDetailsTitle = "Episode Details"
@@ -48,5 +48,13 @@ struct StringUtils {
     static let errorFetchingArtist = "Error fetching artists:"
     static let errorFetchingEpisode = "Error fetching episodes:"
     static let errorFetchingShows = "Error searching shows:"
+    static let errorBiometricNotAvailable = "Biometric authentication not available."
+    static let errorAuthentication = "Authentication Failed"
+    static let errorUnknown = "Unknown error"
+
+    // MARK: - FaceID Strings
+    static let loginFaceID = "Login with FaceID"
+    static let unlockTVMazeReason = "To unlock TVMaze"
+    static let okText = "Ok"
 }
 

@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "24DD6713-655E-4D94-A4CF-7582E2E7A37B"
-            shouldBeEnabled = "Yes"
+            uuid = "BE24DDFB-40AB-4F9C-AB5D-1C461DC44A94"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TvMazeApp/Preview Content/Networking/TVMazeService.swift"
+            filePath = "TvMazeApp/Preview Content/Authentication/AuthenticationManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "searchArtist(by:completion:)"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "authenticateWithFaceID()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
