@@ -11,6 +11,7 @@ import Combine
 class TVShowDetailViewModel: ObservableObject {
     @Published var episodesBySeason: [Int: [Episode]] = [:]
     @Published var isLoading = false
+    @Published var errorMessage: String? = nil
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -26,6 +27,7 @@ class TVShowDetailViewModel: ObservableObject {
                 case .success(let groupedEpisodes):
                     self?.episodesBySeason = groupedEpisodes
                 case .failure(let error):
+                    self?.errorMessage = "\(StringUtils.errorFetchingEpisode) \(error.localizedDescription)"
                     print("\(StringUtils.errorFetchingEpisode) \(error.localizedDescription)")
                 }
             }

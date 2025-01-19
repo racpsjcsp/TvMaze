@@ -78,6 +78,16 @@ struct TVShowDetailView: View {
         .onAppear {
             viewModel.fetchEpisodes(for: show.id)
         }
+        .alert(isPresented: Binding<Bool>(
+            get: { viewModel.errorMessage != nil },
+            set: { _ in viewModel.errorMessage = nil } // Reset error message when alert is dismissed
+        )) {
+            Alert(
+                title: Text(StringUtils.errorTitle),
+                message: Text(viewModel.errorMessage ?? StringUtils.errorUnknownOcurred),
+                dismissButton: .default(Text(StringUtils.okText))
+            )
+        }
     }
 
     private func getFormattedAirdate(for episode: Episode) -> String {

@@ -11,6 +11,7 @@ import Combine
 class ArtistViewModel: ObservableObject {
     @Published var artists: [Artist] = []
     @Published var isLoading = false
+    @Published var errorMessage: String? = nil
 
     private var cancellables = Set<AnyCancellable>()
     private let service = TVMazeService.shared
@@ -25,7 +26,8 @@ class ArtistViewModel: ObservableObject {
                 case .success(let artists):
                     self?.artists = artists
                 case .failure(let error):
-                    print("\(StringUtils.errorFetchingArtist) \(error.localizedDescription)")
+                    self?.errorMessage = "\(StringUtils.errorFetchingArtist) \(error.localizedDescription)"
+                    print("\(StringUtils.errorFetchingShowsForArtist) \(error.localizedDescription)")
                 }
             }
         }

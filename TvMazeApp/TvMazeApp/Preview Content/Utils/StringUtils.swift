@@ -51,6 +51,8 @@ struct StringUtils {
     static let errorBiometricNotAvailable = "Biometric authentication not available."
     static let errorAuthentication = "Authentication Failed"
     static let errorUnknown = "Unknown error"
+    static let errorUnknownOcurred = "Unknown error occurred."
+    static let errorTitle = "Error"
 
     // MARK: - FaceID Strings
     static let loginFaceID = "Login with FaceID"

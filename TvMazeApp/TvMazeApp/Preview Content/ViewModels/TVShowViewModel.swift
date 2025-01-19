@@ -12,6 +12,7 @@ class TVShowViewModel: ObservableObject {
     @Published var shows: [TVShow] = []
     @Published var isLoading = false
     @Published var searchQuery: String = ""
+    @Published var errorMessage: String? = nil
 
     private var currentPage = 0
     private var cancellables = Set<AnyCancellable>()
@@ -30,7 +31,8 @@ class TVShowViewModel: ObservableObject {
                     self?.shows.append(contentsOf: shows)
                     self?.currentPage += 1
                 case .failure(let error):
-                    print("Error fetching shows: \(error.localizedDescription)")
+                    self?.errorMessage = "\(StringUtils.errorFetchingShows) \(error.localizedDescription)"
+                    print("\(StringUtils.errorFetchingShows) \(error.localizedDescription)")
                 }
             }
         }
